@@ -123,15 +123,15 @@ void createfood(void) {
 	snake *food_1;
 	srand((unsigned)time(NULL));
 	food_1 = (snake*)malloc(sizeof(snake));
-	while ((food_1->x % 2) != 0) {         //随机生成食物位置
-		food_1->x = rand() % 52 + 2;
-	}
-	food_1->y = rand() % 24 + 1;
+	do  {                                 
+		food_1->x = (rand() % 52) + 2;    //随机生成食物位置
+	} while (((food_1->x % 2) != 0));
+	food_1->y = (rand() % 24) + 1;
 	q = head;
 	while (q != NULL) {
 		while (q->x == food_1->x && q->y == food_1->y) { //食物和身体重合就改变食物坐标
-			food_1->x = (food_1->x * food_1->x) % 52 + 2;
-			food_1->y = (food_1->y * food_1->y) % 24 + 1;
+			food_1->x = ((food_1->x * food_1->x) % 52) + 2;
+			food_1->y = ((food_1->y * food_1->y) % 24) + 1;
 		}
 		q = q->next;
 	}
