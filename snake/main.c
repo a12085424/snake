@@ -47,7 +47,7 @@ void pos(int x, int y) {   //设置光标位置,根据这个函数实现在屏幕上特定位置输出
 
 void creatMap(void) {
 	int i;
-	for (i = 0; i < 58; i += 2) { //打印上下边框
+	for (i = 0; i <= 56; i += 2) { //打印上下边框
 		pos(i, 0);
 		printf("■");
 		pos(i, 26);
@@ -106,7 +106,7 @@ snake* createfood(void) {
 	food_1->y = rand() % 24 + 1;
 	q = head;
 	while (q != NULL) {
-		if (q->x == food_1->x && q->y == food_1->y) { //食物和身体重合就再生成一次
+		if (q->x == food_1->x && q->y == food_1->y) { //食物和身体重合就再生成一次食物
 			free(food_1);
 			food_1 = createfood();
 			break;
@@ -119,7 +119,7 @@ snake* createfood(void) {
 }
 
 void cantcrosswall(void) {
-	if (head->x <= 0 || head->x >= 58 || head->y <= 0 || head->y >= 26) {
+	if (head->x <= 0 || head->x >= 56 || head->y <= 0 || head->y >= 26) {
 		endgamestatus = 1;
 		endgame();
 	}
@@ -265,12 +265,37 @@ void snakemove(void) {
 }
 
 void pause(void) {
+	int i;
+	for (i = 36; i <= 44; i++) {
+		pos(i, 12);
+		printf("-");
+		pos(i, 14);
+		printf("-");
+	}
+	pos(35, 13);
+	printf("|");
+	pos(45, 13);
+	printf("|");
+	pos(36, 13);
+	printf("暂停中...");
+	pos(99, 29);
 	while (1) {
 		Sleep(300);
+		if (GetAsyncKeyState(VK_ESCAPE)) {
+			endgamestatus = 3;
+			endgame();
+		}
 		if (GetAsyncKeyState(VK_SPACE)) {
+			pos(35,12);
+			printf("            ");
+			pos(35,13);
+			printf("            ");
+			pos(35,14);
+			printf("            ");
 			break;
 		}
 	}
+
 }
 
 void gamecircle(void) {
@@ -279,7 +304,7 @@ void gamecircle(void) {
 	pos(64, 16);
 	printf("用↑.↓.←.→来控制蛇的移动");
 	pos(64, 17);
-	printf("F1为加速，F2为减速\n");
+	printf("J为加速，K为减速\n");
 	pos(64, 18);
 	printf("ESC：退出游戏  空格键：暂停游戏");
 	pos(64, 20);
@@ -289,7 +314,11 @@ void gamecircle(void) {
 		pos(64, 10);
 		printf("得分：%d", score);
 		pos(64, 11);
+		printf("                       ");
+		pos(64, 11);
 		printf("每个食物得分：%d", add);
+		pos(99, 29);
+		Sleep(sleeptime);
 		if (GetAsyncKeyState(VK_UP) && status != D) {
 			status = U;
 		}
@@ -309,21 +338,22 @@ void gamecircle(void) {
 			endgamestatus = 3;
 			break;
 		}
-		else if (GetAsyncKeyState(VK_F1)) {
+		else if (GetAsyncKeyState(0x4A)) {
 			if (sleeptime >= 50) {
 				sleeptime -= 30;
 				add += 2;
 			}
 		}
-		else if (GetAsyncKeyState(VK_F2)) {
-			if (sleeptime <= 290) {
-				sleeptime -= 30;
+		else if (GetAsyncKeyState(0x4B)) {
+			if (add > 2) {
+				sleeptime += 30;
 				add -= 2;
 			}
 		}
-		Sleep(sleeptime);
+		
 		snakemove();
 	}
+	
 }
 
 void welcometogame(void) {
@@ -336,7 +366,7 @@ void welcometogame(void) {
 	pos(25, 12);
 	printf("用↑.↓.←.→来控制蛇的移动\n");
 	pos(25, 13);
-	printf("F1为加速，F2为减速，加速能获得更高的分数\n");
+	printf("J为加速，K为减速，加速能获得更高的分数\n");
 	pos(25, 14);
 	system("pause");
 	system("cls");
